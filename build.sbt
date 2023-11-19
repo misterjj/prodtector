@@ -18,6 +18,7 @@ lazy val prodtector = project
 
     libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.2.0",
     libraryDependencies += "com.raquo" %%% "laminar" % "16.0.0",
+    libraryDependencies += "com.lihaoyi" %%% "upickle" % "3.1.3",
 
 //    fastLinkOutputDir := {
 //      // Ensure that fastLinkJS has run, then return its output directory
