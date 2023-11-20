@@ -1,10 +1,10 @@
-package com.prodtector
+package com.prodtector.front
 
-import com.prodtector.model.config.Screen
+import com.prodtector.protocol.config.model.Screen
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom
 import upickle.*
-import upickle.default.read
+import upickle.default.{ReadWriter, macroRW, read}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,6 +33,7 @@ object Main {
           response <- dom.fetch(config)
           text <- response.text()
         } yield {
+          implicit val rw: ReadWriter[Screen] = macroRW
           val screen = read[Screen](text)
           appElement(screen)
         }
@@ -43,7 +44,7 @@ object Main {
 
   def appElement(screen: Screen): Element = {
     div(
-      h1("Hello Scala JS and vite"),
+      h1("Hello Scala JS and vite !"),
       div(s"config : ${screen}"),
       button("test")
     )
