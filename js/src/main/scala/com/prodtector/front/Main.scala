@@ -4,7 +4,7 @@ import com.prodtector.protocol.config.model.Screen
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom
 import upickle.*
-import upickle.default.{ReadWriter, macroRW, read}
+import upickle.default.read
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,7 +33,6 @@ object Main {
           response <- dom.fetch(config)
           text <- response.text()
         } yield {
-          implicit val rw: ReadWriter[Screen] = macroRW
           val screen = read[Screen](text)
           appElement(screen)
         }
