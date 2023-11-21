@@ -44,14 +44,7 @@ object Main extends IOApp {
       makeResponse(call)
   }
 
-  private val config2Routes: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case GET -> Root / "config2" =>
-      val call: EitherT[Future, Throwable, Screen] = EitherT.rightT(Screen(10, 9))
-
-      makeResponse(call)
-  }
-
-  private val routes = configRoutes <+> config2Routes
+  private val routes = configRoutes /*<+> config2Routes*/
 
   def run(args: List[String]): IO[ExitCode] = {
     EmberServerBuilder
