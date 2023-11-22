@@ -12,7 +12,8 @@ import org.http4s.dsl.io.*
 import org.http4s.ember.server.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
-import org.http4s.{HttpRoutes, MediaType, Request, Response}
+import org.http4s.server.middleware.{CORS, CORSConfig}
+import org.http4s.{HttpRoutes, MediaType, Method, Request, Response}
 import upickle.default.{ReadWriter, write}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -44,7 +45,19 @@ object Main extends IOApp {
       makeResponse(call)
   }
 
-  private val routes = configRoutes /*<+> config2Routes*/
+  // todo: Deprecated ???
+  private val corsConfig = {
+    CORS
+      .DefaultCORSConfig
+      .withAllowCredentials(false)
+      .withAnyMethod(false)
+      .withAllowedMethods(Some(Set(Method.GET)))
+  }
+
+  private val routes = CORS(
+    configRoutes /*<+> config2Routes*/,
+    corsConfig
+  )
 
   def run(args: List[String]): IO[ExitCode] = {
     EmberServerBuilder

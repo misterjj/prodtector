@@ -1,10 +1,11 @@
 package com.prodtector.front
 
+import com.prodtector.front.component.tile.TileComponent
 import com.prodtector.protocol.config.model.Screen
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom
 import upickle.*
-import upickle.default.read
+import upickle.default.{Reader, read}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -23,26 +24,25 @@ def Prodtector(): Unit = {
 }
 
 object Main {
+  def fetch[T](path: String)(implicit reader: Reader[T]): Future[T] = {
+    val backendUrl = "http://127.0.0.1:8080"
+    for {
+      response <- dom.fetch(backendUrl + path)
+      text <- response.text()
+    } yield read[T](text)
+  }
+
+
   def readConfig()(implicit ec: ExecutionContext): Future[Element] = {
-    val q = new dom.URL(dom.window.location.href).searchParams
-    val configPath = Option(q.get("config"))
-
-    configPath match
-      case Some(config) =>
-        for {
-          response <- dom.fetch(config)
-          text <- response.text()
-        } yield {
-          val screen = read[Screen](text)
-          appElement(screen)
-        }
-
-      case None =>
-        Future.successful(error())
+    fetch[Screen]("/config").map(appElement)
   }
 
   def appElement(screen: Screen): Element = {
     div(
+      cls := s"app-container",
+      cls := s"columns-${screen.column}",
+      cls := s"rows-${screen.row}",
+      screen.tiles.map(TileComponent(_)),
       h1("Hello Scala JS and vite !"),
       div(s"config : ${screen}"),
       button("test")
