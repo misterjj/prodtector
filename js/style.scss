@@ -3,46 +3,35 @@
 html, body, #app, .app-container {
   width: 100%;
   height: 100%;
+}
 
+.app-container {
+  --grid-gap: 10px;
 
-  --tile-unit-width: 100%;
-  --tile-unit-height: 100%;
-  --tile-width: 100%;
-  --tile-height: 100%;
+  display: grid;
+  gap: var(--grid-gap);
 
   @for $i from 1 through 10 {
-    .columns-#{$i} {
-      --tile-unit-width: calc(100% / #{$i});
+    &.columns-#{$i} {
+      grid-template-columns: repeat(#{$i}, 1fr);
     }
 
-    .rows-#{$i} {
-      --tile-unit-height: calc(100% / #{$i});
+    &.rows-#{$i} {
+      grid-template-rows: repeat(#{$i}, 1fr);
     }
   }
 
   .tile {
     background: red;
-    width: var(--tile-width);
-    height: var(--tile-height);
-    position: absolute;
-    left: 0;
-    top: 0;
 
     @for $i from 1 through 10 {
-      &.w-#{$i} {
-        --tile-width: calc(var(--tile-unit-width) * #{$i})
-      }
-      &.h-#{$i} {
-        --tile-height: calc(var(--tile-unit-height) * #{$i})
-      }
-    }
-
-    @for $i from 0 through 9 {
-      &.x-#{$i} {
-        left: calc(var(--tile-unit-width) * #{$i})
-      }
-      &.y-#{$i} {
-        y: calc(var(--tile-unit-height) * #{$i})
+      @for $j from (10-$i) through 1 {
+        &.col-#{$i}.w-#{$j} {
+          grid-column: #{$i} / #{$i+$j};
+        }
+        &.row-#{$i}.h-#{$j} {
+          grid-row: #{$i} / #{$i+$j};
+        }
       }
     }
   }

@@ -5,20 +5,20 @@ import upickle.default.{ReadWriter, macroRW}
 sealed trait Tile {
   val width: Int
   val height: Int
-  val x: Int
-  val y: Int
+  val row: Int
+  val col: Int
 }
 
 object Tile {
   implicit val rw: ReadWriter[Tile] = ReadWriter.merge(SingleElementTile.rw, MultipleElementTile.rw)
 
-  @upickle.implicits.key("SINGLE") final case class SingleElementTile(width: Int, height: Int, x: Int, y: Int, element: Element) extends Tile
+  @upickle.implicits.key("SINGLE") final case class SingleElementTile(width: Int, height: Int, row: Int, col: Int, element: Element) extends Tile
 
   object SingleElementTile {
     implicit val rw: ReadWriter[SingleElementTile] = macroRW
   }
 
-  @upickle.implicits.key("MULTIPLE") final case class MultipleElementTile(width: Int, height: Int, x: Int, y: Int, title: String, elements: List[Element]) extends Tile
+  @upickle.implicits.key("MULTIPLE") final case class MultipleElementTile(width: Int, height: Int, row: Int, col: Int, title: String, elements: List[Element]) extends Tile
 
   object MultipleElementTile {
     implicit val rw: ReadWriter[MultipleElementTile] = macroRW

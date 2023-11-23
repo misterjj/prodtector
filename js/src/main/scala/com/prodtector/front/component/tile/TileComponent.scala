@@ -19,8 +19,8 @@ object TileComponent extends Component[Tile] {
   def build(tile: Tile, modifiers: Modifier[ReactiveHtmlElement[HTMLDivElement]]*): Element = {
     div(
       cls := "tile",
-      cls := s"x-${tile.x}",
-      cls := s"y-${tile.x}",
+      cls := s"row-${tile.row}",
+      cls := s"col-${tile.col}",
       cls := s"w-${tile.width}",
       cls := s"h-${tile.height}",
       modifiers

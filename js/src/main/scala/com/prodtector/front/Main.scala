@@ -40,12 +40,9 @@ object Main {
   def appElement(screen: Screen): Element = {
     div(
       cls := s"app-container",
-      cls := s"columns-${screen.column}",
-      cls := s"rows-${screen.row}",
-      screen.tiles.map(TileComponent(_)),
-      h1("Hello Scala JS and vite !"),
-      div(s"config : ${screen}"),
-      button("test")
+      cls := s"columns-${screen.columns}",
+      cls := s"rows-${screen.rows}",
+      screen.tiles.map(TileComponent(_))
     )
   }
 
