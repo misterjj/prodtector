@@ -21,6 +21,7 @@ lazy val prodtector = crossProject(JSPlatform, JVMPlatform).in(file(".")).
     // Add JVM-specific settings here
     libraryDependencies += "org.http4s" %% "http4s-dsl" % http4sVersion,
     libraryDependencies += "org.http4s" %% "http4s-ember-server" % http4sVersion,
+    libraryDependencies += "org.http4s" %% "http4s-ember-client" % http4sVersion,
     libraryDependencies += "com.typesafe" % "config" % "1.4.3"
   ).
   jsSettings(

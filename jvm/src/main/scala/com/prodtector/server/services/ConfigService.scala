@@ -1,6 +1,7 @@
 package com.prodtector.server.services
 
 import cats.data.EitherT
+import cats.effect.IO
 import com.prodtector.protocol.config.model.Screen
 import upickle.core.AbortException
 import upickle.default.read
@@ -9,7 +10,7 @@ import scala.concurrent.ExecutionContext
 import scala.util.Try
 
 class ConfigService {
-  def load(path: String)(implicit ec: ExecutionContext): ServiceResult[Screen] = {
+  def load(path: String): ServiceResult[Screen] = {
 
     def readConfig: ServiceResult[String] = {
       EitherT.fromEither {

@@ -31,7 +31,7 @@ object Tile {
   object Element {
     implicit val rw: ReadWriter[Element] = ReadWriter.merge(Healthcheck.rw)
 
-    @upickle.implicits.key("HTTP_HEALTHCHECK") final case class Healthcheck(title: String) extends Element
+    @upickle.implicits.key("HTTP_HEALTHCHECK") final case class Healthcheck(title: String, url: String, expectedResultCode: Int) extends Element
 
     object Healthcheck {
       implicit val rw: ReadWriter[Healthcheck] = macroRW
