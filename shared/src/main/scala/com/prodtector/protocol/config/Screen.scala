@@ -1,4 +1,4 @@
-package com.prodtector.protocol.config.model
+package com.prodtector.protocol.config
 
 import upickle.default.{ReadWriter, macroRW}
 

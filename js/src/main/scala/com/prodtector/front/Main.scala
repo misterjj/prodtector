@@ -1,7 +1,7 @@
 package com.prodtector.front
 
 import com.prodtector.front.component.tile.TileComponent
-import com.prodtector.protocol.config.model.Screen
+import com.prodtector.protocol.config.Screen
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom
 import upickle.*
@@ -16,7 +16,7 @@ import scala.util.{Failure, Success}
 def Prodtector(): Unit = {
   Main.readConfig().onComplete {
     case Failure(exception) =>
-      render(dom.document.querySelector("#app"), Main.error())
+      render(dom.document.querySelector("#app"), Main.error(exception))
 
     case Success(el) =>
       render(dom.document.querySelector("#app"), el)
@@ -42,11 +42,12 @@ object Main {
       cls := s"app-container",
       cls := s"columns-${screen.columns}",
       cls := s"rows-${screen.rows}",
-      screen.tiles.map(TileComponent(_))
+      screen.tiles.map(TileComponent(_).build())
     )
   }
 
-  def error(): Element = {
+  def error(exception: Throwable): Element = {
+    println(exception)
     div("error")
   }
 }

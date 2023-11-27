@@ -1,23 +1,33 @@
 package com.prodtector.front.component.tile
 
 import com.prodtector.front.component.Component
-import com.prodtector.protocol.config.model.Tile
-import com.prodtector.protocol.config.model.Tile.SingleElementTile
+import com.prodtector.front.component.element.http.HealthcheckComponent
+import com.prodtector.protocol.config.Tile
+import com.prodtector.protocol.config.Tile.Element.*
+import com.prodtector.protocol.config.Tile.SingleElementTile
 import com.raquo.laminar.api.L.*
+import com.raquo.laminar.modifiers.Modifier
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import org.scalajs.dom.HTMLDivElement
 
-object SingleElementTileComponent extends Component[SingleElementTile] {
-  def apply(tile: SingleElementTile): Element = {
-    build(tile)
-  }
-
-  override def build(tile: SingleElementTile, modifiers: Modifier[ReactiveHtmlElement[HTMLDivElement]]*): Element = {
-    TileComponent.build(
-      tile,
+final case class SingleElementTileComponent(tile: SingleElementTile, component: TileComponent, children: Element) extends Component{
+  override def build(modifiers: Modifier[ReactiveHtmlElement[HTMLDivElement]]*): Element = {
+    component.build(
       cls := "title-single-element",
-      tile.element.title,
-      "fdsfdsf2"
+      children,
+      modifiers
     )
   }
 }
+
+object SingleElementTileComponent {
+  def apply(tile: SingleElementTile, component: TileComponent): SingleElementTileComponent = {
+    val element = tile.element match {
+      case el: Healthcheck => HealthcheckComponent(el).single()
+    }
+
+    new SingleElementTileComponent(tile, component, element)
+  }
+}
+
+

@@ -1,5 +1,6 @@
-package com.prodtector.protocol.config.model
+package com.prodtector.protocol.config
 
+import upickle.default
 import upickle.default.{ReadWriter, macroRW}
 
 sealed trait Tile {
@@ -24,6 +25,10 @@ object Tile {
     implicit val rw: ReadWriter[MultipleElementTile] = macroRW
   }
 
+  trait Serializable[T] {
+    implicit val rw: ReadWriter[T]
+  }
+
   sealed trait Element {
     val title: String
   }
@@ -33,8 +38,8 @@ object Tile {
 
     @upickle.implicits.key("HTTP_HEALTHCHECK") final case class Healthcheck(title: String, url: String, expectedResultCode: Int) extends Element
 
-    object Healthcheck {
-      implicit val rw: ReadWriter[Healthcheck] = macroRW
+    object Healthcheck extends Serializable[Healthcheck] {
+      override implicit val rw: ReadWriter[Healthcheck] = macroRW
     }
   }
 }

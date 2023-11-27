@@ -2,7 +2,7 @@ package com.prodtector.server.services
 
 import cats.data.EitherT
 import cats.effect.IO
-import com.prodtector.protocol.config.model.Screen
+import com.prodtector.protocol.config.Screen
 import upickle.core.AbortException
 import upickle.default.read
 

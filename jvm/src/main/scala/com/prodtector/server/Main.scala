@@ -3,8 +3,9 @@ package com.prodtector.server
 import cats.effect.*
 import cats.implicits.toSemigroupKOps
 import com.comcast.ip4s.*
-import com.prodtector.protocol.config.model.Screen
+import com.prodtector.protocol.config.Screen
 import com.prodtector.protocol.service.ServiceResponse
+import com.prodtector.protocol.service.http.HealthcheckRequest
 import com.prodtector.server.config.MainConfig
 import com.prodtector.server.services.{ConfigService, HttpService, ServiceResult}
 import com.typesafe.config.{Config, ConfigFactory}
@@ -15,7 +16,7 @@ import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import org.http4s.server.middleware.CORS
 import org.http4s.{HttpRoutes, MediaType, Method, Request, Response}
-import upickle.default.{ReadWriter, write}
+import upickle.default.{ReadWriter, write, read}
 
 object Main extends IOApp {
   val config: Config = ConfigFactory.load()
@@ -44,9 +45,13 @@ object Main extends IOApp {
   }
 
   private val httpServiceRoutes: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case GET -> Root / "service" / "http" / "healthcheck" =>
-      val call: ServiceResult[ServiceResponse] = httpService.healthcheck("https://www.google.com", 200)
-      makeResponse(call)
+    case req @ POST -> Root / "service" / "http" / "healthcheck" =>
+      req.as[String] flatMap { body =>
+        val request = read[HealthcheckRequest](body)
+        val call: ServiceResult[ServiceResponse] = httpService.healthcheck(request.url, request.expectedResultCode)
+
+        makeResponse(call)
+      }
   }
 
   // todo: Deprecated ???
