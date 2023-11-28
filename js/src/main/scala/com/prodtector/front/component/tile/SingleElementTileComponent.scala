@@ -10,6 +10,8 @@ import com.raquo.laminar.modifiers.Modifier
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import org.scalajs.dom.HTMLDivElement
 
+import scala.concurrent.ExecutionContext
+
 final case class SingleElementTileComponent(tile: SingleElementTile, component: TileComponent, children: Element) extends Component{
   override def build(modifiers: Modifier[ReactiveHtmlElement[HTMLDivElement]]*): Element = {
     component.build(
@@ -21,7 +23,7 @@ final case class SingleElementTileComponent(tile: SingleElementTile, component: 
 }
 
 object SingleElementTileComponent {
-  def apply(tile: SingleElementTile, component: TileComponent): SingleElementTileComponent = {
+  def apply(tile: SingleElementTile, component: TileComponent)(implicit ec: ExecutionContext): SingleElementTileComponent = {
     val element = tile.element match {
       case el: Healthcheck => HealthcheckComponent(el).single()
     }

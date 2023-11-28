@@ -9,6 +9,8 @@ import com.raquo.laminar.nodes.ReactiveHtmlElement
 import org.scalajs.dom
 import org.scalajs.dom.HTMLDivElement
 
+import scala.concurrent.ExecutionContext
+
 class TileComponent(tile: Tile) extends Component{
   def build(modifiers: Modifier[ReactiveHtmlElement[HTMLDivElement]]*): Element = {
     div(
@@ -23,7 +25,7 @@ class TileComponent(tile: Tile) extends Component{
 }
 
 object TileComponent {
-  def apply(tile: Tile): Component = {
+  def apply(tile: Tile)(implicit ec: ExecutionContext): Component = {
     tile match
       case t: SingleElementTile => SingleElementTileComponent(t, new TileComponent(tile))
       case t: MultipleElementTile => MultipleElementTileComponent(t, new TileComponent(tile) )

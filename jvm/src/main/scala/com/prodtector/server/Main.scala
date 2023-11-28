@@ -60,7 +60,7 @@ object Main extends IOApp {
       .DefaultCORSConfig
       .withAllowCredentials(false)
       .withAnyMethod(false)
-      .withAllowedMethods(Some(Set(Method.GET)))
+      .withAllowedMethods(Some(Set(Method.GET, Method.POST)))
   }
 
   private val routes = CORS(

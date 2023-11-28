@@ -9,6 +9,8 @@ import com.raquo.laminar.api.L.*
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import org.scalajs.dom.HTMLDivElement
 
+import scala.concurrent.ExecutionContext
+
 final case class MultipleElementTileComponent(tile: MultipleElementTile, component: TileComponent, elements: List[Element]) extends Component {
   override def build(modifiers: Modifier[ReactiveHtmlElement[HTMLDivElement]]*): Element = {
     component.build(
@@ -22,7 +24,7 @@ final case class MultipleElementTileComponent(tile: MultipleElementTile, compone
 
 
 object MultipleElementTileComponent {
-  def apply(tile: MultipleElementTile, component: TileComponent): Component = {
+  def apply(tile: MultipleElementTile, component: TileComponent)(implicit ec: ExecutionContext): Component = {
     val elements = tile.elements.map {
       case el: Healthcheck => HealthcheckComponent(el).multiple()
     }
