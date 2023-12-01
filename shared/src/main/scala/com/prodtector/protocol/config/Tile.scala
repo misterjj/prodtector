@@ -1,7 +1,8 @@
 package com.prodtector.protocol.config
 
 import upickle.default
-import upickle.default.{ReadWriter, macroRW}
+import upickle.default.ReadWriter
+import upickle.default.macroRW
 
 sealed trait Tile {
   val width: Int
@@ -13,13 +14,12 @@ sealed trait Tile {
 object Tile {
   implicit val rw: ReadWriter[Tile] = ReadWriter.merge(SingleElementTile.rw, MultipleElementTile.rw)
 
-  @upickle.implicits.key("SINGLE") final case class SingleElementTile(width: Int, height: Int, row: Int, col: Int, element: Element) extends Tile
-
   object SingleElementTile {
     implicit val rw: ReadWriter[SingleElementTile] = macroRW
   }
 
-  @upickle.implicits.key("MULTIPLE") final case class MultipleElementTile(width: Int, height: Int, row: Int, col: Int, title: String, elements: List[Element]) extends Tile
+  @upickle.implicits.key("SINGLE")
+  final case class SingleElementTile(width: Int, height: Int, row: Int, col: Int, element: Element) extends Tile
 
   object MultipleElementTile {
     implicit val rw: ReadWriter[MultipleElementTile] = macroRW
@@ -29,14 +29,27 @@ object Tile {
     implicit val rw: ReadWriter[T]
   }
 
+  @upickle.implicits.key("MULTIPLE")
+  final case class MultipleElementTile(
+      width: Int,
+      height: Int,
+      row: Int,
+      col: Int,
+      title: String,
+      elements: List[Element]
+  ) extends Tile
+
   sealed trait Element {
     val title: String
+    val delay: Int
   }
 
   object Element {
     implicit val rw: ReadWriter[Element] = ReadWriter.merge(Healthcheck.rw)
 
-    @upickle.implicits.key("HTTP_HEALTHCHECK") final case class Healthcheck(title: String, url: String, expectedResultCode: Int) extends Element
+    @upickle.implicits.key("HTTP_HEALTHCHECK")
+    final case class Healthcheck(title: String, delay: Int = 10000, url: String, expectedResultCode: Int)
+        extends Element
 
     object Healthcheck extends Serializable[Healthcheck] {
       override implicit val rw: ReadWriter[Healthcheck] = macroRW

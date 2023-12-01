@@ -38,10 +38,9 @@ object Main extends IOApp {
   val client: Client[IO] = JavaNetClientBuilder[IO].create
   val httpService: HttpService = new HttpService(client)
 
-  private val configRoutes: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case GET -> Root / "config" =>
-      val call: ServiceResult[Screen] = configService.load(mainConfig.configPath)
-      makeResponse(call)
+  private val configRoutes: HttpRoutes[IO] = HttpRoutes.of[IO] { case GET -> Root / "config" =>
+    val call: ServiceResult[Screen] = configService.load(mainConfig.configPath)
+    makeResponse(call)
   }
 
   private val httpServiceRoutes: HttpRoutes[IO] = HttpRoutes.of[IO] {
@@ -56,8 +55,7 @@ object Main extends IOApp {
 
   // todo: Deprecated ???
   private val corsConfig = {
-    CORS
-      .DefaultCORSConfig
+    CORS.DefaultCORSConfig
       .withAllowCredentials(false)
       .withAnyMethod(false)
       .withAllowedMethods(Some(Set(Method.GET, Method.POST)))

@@ -1,4 +1,5 @@
 @import "bootstrap/scss/bootstrap-reboot";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
 
 html, body, #app, .app-container {
   width: 100%;
@@ -22,7 +23,6 @@ html, body, #app, .app-container {
   }
 
   .tile {
-    background: red;
 
     @for $i from 1 through 10 {
       @for $j from (10-$i) through 1 {
@@ -32,6 +32,52 @@ html, body, #app, .app-container {
         &.row-#{$i}.h-#{$j} {
           grid-row: #{$i} / #{$i+$j};
         }
+      }
+    }
+  }
+
+
+  --main-backgound-color: #050010;
+  --main-text-color: #232323;
+  --main-font-family: 'Roboto', sans-serif;
+  --element-default-background-color: #c5c5c5;
+  --element-sucess-background-color: #07af40;
+  --element-fail-background-color: #a80721;
+
+  background-color: var(--main-backgound-color);
+  color: var(--main-text-color);
+  font-family: var(--main-font-family);
+
+  .title-single-element {
+    .element {
+      --element-background-color: var(--element-default-background-color);
+      height: 100%;
+      width: 100%;
+      background-color: var(--element-background-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--grid-gap);
+
+      &.SUCCESS {
+        --element-background-color: var(--element-sucess-background-color);
+      }
+
+      &.FAIL {
+        --element-background-color: var(--element-fail-background-color);
+      }
+
+      .element-title {
+        width: 100%;
+        text-align: center;
+        font-weight: 700;
+        font-size: 2.25rem;
+      }
+
+      .element-content {
+        width: 100%;
+        flex-grow: 1;
+        font-size: 1.75rem;
       }
     }
   }

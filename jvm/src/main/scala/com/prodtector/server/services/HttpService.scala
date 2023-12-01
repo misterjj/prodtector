@@ -4,6 +4,7 @@ import cats.*
 import cats.data.*
 import cats.effect.IO
 import com.prodtector.protocol.service.ServiceResponse
+import com.prodtector.protocol.service.ServiceResponse.Status.{FAIL, SUCCESS}
 import org.http4s.client.Client
 import org.http4s.{Request, Uri}
 
@@ -27,8 +28,8 @@ class HttpService(client: Client[IO]) {
 
           IO.pure {
             ServiceResponse(
-              success = isSuccess,
-              response = if (isSuccess) "OK" else "NOK"
+              status = if (isSuccess) SUCCESS else FAIL,
+              response = if (isSuccess) "OK" else s"receive : ${response.status.code}"
             )
           }
         }
@@ -36,7 +37,7 @@ class HttpService(client: Client[IO]) {
     }
 
     for {
-      request <- makeRequest
+      request  <- makeRequest
       response <- run(request)
     } yield response
   }
