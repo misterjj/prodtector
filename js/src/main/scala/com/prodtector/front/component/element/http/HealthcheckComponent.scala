@@ -1,8 +1,11 @@
 package com.prodtector.front.component.element.http
 
 import com.prodtector.front.Tool.post
+import com.prodtector.front.component.FitTextToParentComponent
+import com.prodtector.front.component.tile.SingleElementTileComponent
 import com.prodtector.protocol.config.Tile
-import com.prodtector.protocol.config.Tile.Element.Healthcheck
+import com.prodtector.protocol.config.Tile.Element.ElementRenderer.{ElementClassicRenderer, ElementFitToParentRenderer}
+import com.prodtector.protocol.config.Tile.Element.{ElementRenderer, Healthcheck}
 import com.prodtector.protocol.service.ServiceResponse
 import com.prodtector.protocol.service.ServiceResponse.Status.RUNNING
 import com.prodtector.protocol.service.http.HealthcheckRequest
@@ -37,11 +40,17 @@ final case class HealthcheckComponent(tile: Healthcheck)(implicit ec: ExecutionC
     }
     dataCollector(response)
 
-    div(
-      cls := "element",
-      cls <-- responseSignal.map(_.status.toString),
-      div(cls := "element-title", tile.title),
-      div(cls := "element-content", child.text <-- responseSignal.map(_.response))
+    val render: Element = {
+      tile.renderer match
+        case ElementClassicRenderer() => div(child.text <-- responseSignal.map(_.response))
+        case ElementFitToParentRenderer(minFontSize, maxFontSize) =>
+          FitTextToParentComponent(responseSignal.map(_.response), minFontSize, maxFontSize)
+    }
+
+    SingleElementTileComponent.render(
+      tile.title,
+      responseSignal.map(_.status.toString),
+      render
     )
   }
 

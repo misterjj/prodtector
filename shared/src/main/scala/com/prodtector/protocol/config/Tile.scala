@@ -1,5 +1,7 @@
 package com.prodtector.protocol.config
 
+import com.prodtector.protocol.config.Tile.Element.ElementRenderer
+import com.prodtector.protocol.config.Tile.Element.ElementRenderer.ElementClassicRenderer
 import upickle.default
 import upickle.default.ReadWriter
 import upickle.default.macroRW
@@ -42,17 +44,46 @@ object Tile {
   sealed trait Element {
     val title: String
     val delay: Int
+    val renderer: ElementRenderer
   }
 
   object Element {
     implicit val rw: ReadWriter[Element] = ReadWriter.merge(Healthcheck.rw)
 
     @upickle.implicits.key("HTTP_HEALTHCHECK")
-    final case class Healthcheck(title: String, delay: Int = 10000, url: String, expectedResultCode: Int)
-        extends Element
+    final case class Healthcheck(
+        title: String,
+        delay: Int = 10000,
+        renderer: ElementRenderer = ElementClassicRenderer(),
+        url: String,
+        expectedResultCode: Int
+    ) extends Element
 
     object Healthcheck extends Serializable[Healthcheck] {
       override implicit val rw: ReadWriter[Healthcheck] = macroRW
+    }
+
+    sealed trait ElementRenderer
+
+    object ElementRenderer {
+      implicit val rw: ReadWriter[ElementRenderer] = ReadWriter.merge(
+        ElementClassicRenderer.rw,
+        ElementFitToParentRenderer.rw
+      )
+
+      @upickle.implicits.key("CLASSIC")
+      final case class ElementClassicRenderer() extends ElementRenderer
+
+      object ElementClassicRenderer extends Serializable[ElementClassicRenderer] {
+        override implicit val rw: ReadWriter[ElementClassicRenderer] = macroRW
+      }
+
+      @upickle.implicits.key("FIT_TO_PARENT")
+      final case class ElementFitToParentRenderer(minFontSize: Int = 10, maxFontSize: Int = 30) extends ElementRenderer
+
+      object ElementFitToParentRenderer extends Serializable[ElementFitToParentRenderer] {
+        override implicit val rw: ReadWriter[ElementFitToParentRenderer] = macroRW
+      }
     }
   }
 }

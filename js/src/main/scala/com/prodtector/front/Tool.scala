@@ -25,7 +25,6 @@ object Tool {
       writer: Writer[T],
       ec: ExecutionContext
   ): Future[R] = {
-    println(write(body))
     val init = js.Dynamic.literal(method = HttpMethod.POST, mode = mode, body = write(body)).asInstanceOf[RequestInit]
     val request = Request(serverUrl + path, init)
 

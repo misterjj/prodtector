@@ -12,7 +12,8 @@ import org.scalajs.dom.HTMLDivElement
 
 import scala.concurrent.ExecutionContext
 
-final case class SingleElementTileComponent(tile: SingleElementTile, component: TileComponent, children: Element) extends Component{
+final case class SingleElementTileComponent(tile: SingleElementTile, component: TileComponent, children: Element)
+    extends Component {
   override def build(modifiers: Modifier[ReactiveHtmlElement[HTMLDivElement]]*): Element = {
     component.build(
       cls := "title-single-element",
@@ -23,13 +24,22 @@ final case class SingleElementTileComponent(tile: SingleElementTile, component: 
 }
 
 object SingleElementTileComponent {
-  def apply(tile: SingleElementTile, component: TileComponent)(implicit ec: ExecutionContext): SingleElementTileComponent = {
+  def apply(tile: SingleElementTile, component: TileComponent)(implicit
+      ec: ExecutionContext
+  ): SingleElementTileComponent = {
     val element = tile.element match {
       case el: Healthcheck => HealthcheckComponent(el).single()
     }
 
     new SingleElementTileComponent(tile, component, element)
   }
+
+  def render(title: String, clazz: Signal[String], content: Element): Element = {
+    div(
+      cls := "element",
+      cls <-- clazz,
+      div(cls := "element-title", title),
+      div(cls := "element-content vertical-align", content)
+    )
+  }
 }
-
-

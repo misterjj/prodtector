@@ -23,7 +23,6 @@ html, body, #app, .app-container {
   }
 
   .tile {
-
     @for $i from 1 through 10 {
       @for $j from (10-$i) through 1 {
         &.col-#{$i}.w-#{$j} {
@@ -40,6 +39,7 @@ html, body, #app, .app-container {
   --main-backgound-color: #050010;
   --main-text-color: #232323;
   --main-font-family: 'Roboto', sans-serif;
+  --tile-boder-radius: 5px;
   --element-default-background-color: #c5c5c5;
   --element-sucess-background-color: #07af40;
   --element-fail-background-color: #a80721;
@@ -48,37 +48,60 @@ html, body, #app, .app-container {
   color: var(--main-text-color);
   font-family: var(--main-font-family);
 
-  .title-single-element {
-    .element {
-      --element-background-color: var(--element-default-background-color);
-      height: 100%;
-      width: 100%;
-      background-color: var(--element-background-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: var(--grid-gap);
+  .tile {
+    border-radius: var(--tile-boder-radius);
+    overflow: hidden;
 
-      &.SUCCESS {
-        --element-background-color: var(--element-sucess-background-color);
-      }
-
-      &.FAIL {
-        --element-background-color: var(--element-fail-background-color);
-      }
-
-      .element-title {
+    &.title-single-element {
+      .element {
+        --element-background-color: var(--element-default-background-color);
+        height: 100%;
         width: 100%;
-        text-align: center;
-        font-weight: 700;
-        font-size: 2.25rem;
-      }
+        background-color: var(--element-background-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: var(--grid-gap);
 
-      .element-content {
-        width: 100%;
-        flex-grow: 1;
-        font-size: 1.75rem;
+        &.SUCCESS {
+          --element-background-color: var(--element-sucess-background-color);
+        }
+
+        &.FAIL {
+          --element-background-color: var(--element-fail-background-color);
+        }
+
+        .element-title {
+          width: 100%;
+          text-align: center;
+          font-weight: 700;
+          font-size: 2.25rem;
+        }
+
+        .element-content {
+          width: 100%;
+          flex-grow: 1;
+          font-size: 1.85rem;
+          text-align: center;
+        }
       }
     }
+  }
+}
+
+.fit-to-parent {
+  > span {
+    display: inline-block;
+    white-space: nowrap;
+    transition: all .2s linear;
+  }
+}
+
+.vertical-align {
+  display: flex;
+  align-items: center;
+
+  > * {
+    flex-grow: 1;
   }
 }
